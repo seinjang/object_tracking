@@ -33,11 +33,8 @@ def face_detection(model, input, type, output):
         # write result image
         write_result(img, faces, output)
 
-    else:
-        if type == 'video':
-            cap = cv2.VideoCapture(input)
-        elif type == 'webcam':
-            cap = cv2.VideoCapture(0)
+    elif type == 'video':
+        cap = cv2.VideoCapture(input)
 
         width = int(cap.get(3))
         height = int(cap.get(4))
@@ -54,6 +51,30 @@ def face_detection(model, input, type, output):
 
                 # write video
                 out.write(frame_with_bbox)
+
+        cap.release()
+
+    elif type == 'webcam':
+        cap = cv2.VideoCapture(0)
+
+        width = int(cap.get(3))
+        height = int(cap.get(4))
+        fcc = cv2.VideoWriter_fourcc('D', 'I', 'V', 'X')
+        out = cv2.VideoWriter(output, fcc, 30, (width, height))
+
+        while True:
+            ret, frame = cap.read()
+
+            if ret:
+                faces, landmarks = DlibDetector().detect_face(frame, model)
+
+                frame_with_bbox = draw_bbox(frame, faces)
+
+                # write video
+                out.write(frame_with_bbox)
+
+                if cv2.waitKey(1) == ord('q'):
+                    break
 
         cap.release()
 
