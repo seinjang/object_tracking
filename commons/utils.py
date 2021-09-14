@@ -33,3 +33,11 @@ def write_result(image, faces, output_dir='./'):
 
     # write full image with bounding box on the faces
     cv2.imwrite(os.path.join(output_dir, 'face_detected_image.jpg'), image)
+
+
+def draw_bbox(image, faces, color=(0, 0, 125)):
+    for face, bbox in faces:
+        x, y, w, h = bbox
+        cv2.rectangle(image, (x, y), (x+w, y+h), color, 2)
+
+    return image
