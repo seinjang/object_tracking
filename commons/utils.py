@@ -2,9 +2,12 @@ import os
 import cv2
 
 
-def load_image(image_path):
+def load_image(image_path, rgb=False):
     if os.path.isfile(image_path):
-        image = cv2.imread(image_path)
+        if rgb:
+            image = cv2.imread(image_path)[..., ::-1]  # OpenCV image (BGR to RGB)
+        else:
+            image = cv2.imread(image_path)
     else:
         raise ValueError(f"Please check {image_path} exists")
 
